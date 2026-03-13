@@ -27,10 +27,10 @@ Go to:
 Use these settings:
 
 1. Token type: Fine-grained personal access token
-2. Token name: something descriptive, such as `pipsandbox-private-data-read`
-3. Expiration: choose a reasonable period, such as 90 or 180 days
-4. Repository access: Only select repositories
-5. Selected repository: the private data repository only
+2. Token name: something descriptive, such as `gpid-data-read`
+3. Resource owner: GPID-WB
+4. Expiration: choose a reasonable period, such as 90 or 180 days
+5. Repository access: All repositories
 6. Repository permissions: Contents = Read-only
 
 After creating the token, copy it immediately. GitHub only shows it once.
@@ -79,7 +79,7 @@ If a token-like string appears, the setup worked.
 Run a simple test:
 
 ```stata
-pipsandbox, filename(syears)
+pipsb, filename(syears)
 ```
 
 If everything is configured correctly, the command should download the dataset from the private repository and load it into memory.
@@ -107,7 +107,7 @@ If you get a 404 error:
 
 ## Short Team Version
 
-### Private GitHub access for pipsandbox
+### Private GitHub access for pipsb
 
 Each user must create their own fine-grained GitHub personal access token from their personal GitHub settings.
 
@@ -136,7 +136,7 @@ Then restart Stata and test:
 
 ```stata
 display "$GPID_GITHUB_TOKEN"
-pipsandbox, filename(syears)
+pipsb, filename(syears)
 ```
 
 Notes:

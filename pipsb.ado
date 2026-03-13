@@ -38,7 +38,7 @@ program define pipsb
     }
 
     if c(os) != "Windows" {
-        di as error "pipsb private downloads currently require Windows PowerShell."
+        di as error "pipsb private downloads currently require Windows."
         exit 198
     }
 
@@ -47,55 +47,36 @@ program define pipsb
     local url "https://api.github.com/repos/`repo_owner'/`repo_name'/contents/`data_path'?ref=`repo_ref'"
 
     // Download to tempfile and load without saving a permanent file on disk
-    tempfile tmpdata psscript statusfile
-    local token_ps  = subinstr(`"`token'"', "'", "''", .)
-    local url_ps    = subinstr(`"`url'"', "'", "''", .)
-    local tmpdata_ps = subinstr(`"`tmpdata'"', "'", "''", .)
-    local status_ps  = subinstr(`"`statusfile'"', "'", "''", .)
-    local dollar = char(36)
-
-    file open ps using "`psscript'", write text replace
-    file write ps `"`dollar'ErrorActionPreference = 'Stop'"' _n
-    file write ps `"`dollar'headers = @{"' _n
-    file write ps `"    Authorization = 'Bearer `token_ps''"' _n
-    file write ps `"    Accept = 'application/vnd.github.raw+json'"' _n
-    file write ps `"    'X-GitHub-Api-Version' = '2022-11-28'"' _n
-    file write ps `"}"' _n
-    file write ps `"try {"' _n
-    file write ps `"    Invoke-WebRequest -Headers `dollar'headers -Uri '`url_ps'' -OutFile '`tmpdata_ps'' -UseBasicParsing | Out-Null"' _n
-    file write ps `"    Set-Content -Path '`status_ps'' -Value '0'"' _n
-    file write ps `"    exit 0"' _n
-    file write ps `"}"' _n
-    file write ps `"catch {"' _n
-    file write ps `"    `dollar'statusCode = ''"' _n
-    file write ps `"    if (`dollar'_.Exception.Response -and `dollar'_.Exception.Response.StatusCode) {"' _n
-    file write ps `"        `dollar'statusCode = [int] `dollar'_.Exception.Response.StatusCode.value__"' _n
-    file write ps `"    }"' _n
-    file write ps `"    `dollar'message = `dollar'_.Exception.Message"' _n
-    file write ps `"    if (`dollar'message) {"' _n
-    file write ps `"        `dollar'message = `dollar'message -replace '[\r\n]+', ' '"' _n
-    file write ps `"    }"' _n
-    file write ps `"    Set-Content -Path '`status_ps'' -Value `dollar'statusCode"' _n
-    file write ps `"    Add-Content -Path '`status_ps'' -Value `dollar'message"' _n
-    file write ps `"    exit 1"' _n
-    file write ps `"}"' _n
-    file close ps
+    tempfile tmpdata statusfile errmsgfile
 
     di as text "Downloading `filename'.dta (PPP year `ppp_year') ..."
-    capture quietly shell powershell -NoProfile -ExecutionPolicy Bypass -File "`psscript'"
+    capture quietly shell cmd /c curl.exe -L -sS -H "Authorization: Bearer `token'" -H "Accept: application/vnd.github.raw+json" -H "X-GitHub-Api-Version: 2022-11-28" -o "`tmpdata'" -w "%{http_code}" "`url'" > "`statusfile'" 2> "`errmsgfile'"
+    local shell_rc = _rc
 
     capture confirm file "`statusfile'"
     if _rc {
-        di as error "GitHub download failed before PowerShell returned a status."
+        if `shell_rc' {
+            di as error "curl exited before writing a status file (shell rc=`shell_rc')."
+        }
+        else {
+            di as error "GitHub download failed before PowerShell returned a status."
+        }
         exit 601
     }
 
     file open status using "`statusfile'", read text
     file read status status_code
-    file read status status_message
     file close status
 
-    if "`status_code'" != "0" {
+    local status_message ""
+    capture confirm file "`errmsgfile'"
+    if !_rc {
+        file open err using "`errmsgfile'", read text
+        file read err status_message
+        file close err
+    }
+
+    if "`status_code'" != "200" {
         if inlist("`status_code'", "401", "403") {
             di as error "GitHub authentication failed. Check GPID_GITHUB_TOKEN in profile.do."
         }
@@ -103,11 +84,11 @@ program define pipsb
             di as error "Private data file not found: `data_path'"
         }
         else {
-            di as error "GitHub download failed."
+            di as error "GitHub download failed (HTTP `status_code')."
         }
 
         if "`status_message'" != "" {
-            di as text "PowerShell message: `status_message'"
+            di as text "curl message: `status_message'"
         }
         exit 601
     }
