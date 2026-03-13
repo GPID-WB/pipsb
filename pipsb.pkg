@@ -1,0 +1,11 @@
+v 0.0.1
+d 'pipsb': Download PIP sandbox test data into Stata memory
+d
+d TESTING PURPOSES ONLY. Data is fake and does not reflect any
+d official estimates by the World Bank Group or its members.
+d
+d Distribution-Date: 20260312
+d License: MIT
+
+F pipsb.ado
+F pipsb.sthlp

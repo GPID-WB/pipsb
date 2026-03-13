@@ -1,0 +1,7 @@
+v 0.0.1
+d Materials by GPID Team, World Bank
+d https://github.com/GPID-WB/pip-sandbox
+
+d 'pipsb': Download PIP sandbox test data into Stata memory
+
+p pipsb
