@@ -111,7 +111,13 @@ Requires the {browse "https://github.com/haghish/github":github} package:
 {phang2}{cmd:. net install github, from("https://haghish.github.io/github/")}{p_end}
 {phang2}{cmd:. github install GPID-WB/pipsb}{p_end}
 
-{title:Author}
+{marker authors}{...}
+{title:Authors}
+
+{p 4 4 4}R.Andres Castaneda, Data Group, Department of Development Economics, The World Bank{p_end}
+{p 6 6 4}Email: {browse "mailto: acastanedaa@worldbank.org":  acastanedaa@worldbank.org}{p_end}
+{p 6 6 4}GitHub:{browse "https://github.com/randrescastaneda": randrescastaneda }{p_end}
+
 
 {p 4 4 2}
 GPID Team, World Bank Group
