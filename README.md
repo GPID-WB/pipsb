@@ -33,8 +33,6 @@ Recommended settings:
 3. Repository permissions: `Contents = Read-only`
 4. Expiration: a reasonable period such as 90 or 180 days
 
-If your organization requires it, complete SSO authorization or admin approval.
-
 ## Store the token in Stata
 
 Add the token to your personal `profile.do`:
@@ -58,6 +56,9 @@ List the releases available in the private data repository:
 ```stata
 pipsb, listreleases
 ```
+
+> **Warning**
+> These are **NOT** official PIP releases. They are sandbox-data releases created before an official release.
 
 List the available `.dta` files for the default PPP year in the latest release:
 
