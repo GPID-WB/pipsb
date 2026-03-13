@@ -337,3 +337,9 @@ program define _pipsb_validate_filename, sclass
 
     restore
 end
+
+
+exit
+
+
+*! 0.0.1. Add feature to download from private repo

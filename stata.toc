@@ -1,7 +1,8 @@
 v 0.0.1
-d Materials by GPID Team, World Bank
-d https://github.com/GPID-WB/pip-sandbox
+d Authors:
+d  -- R.Andres, The (acastanedaa@worldbank.org)
+d  -- Castaneda, World
 
-d 'pipsb': Download PIP sandbox test data into Stata memory
+d 'pipsb': TESTING PURPOSES ONLY. Data is fake and does not reflect any official estimates by the World Bank Group or its members.
 
 p pipsb
