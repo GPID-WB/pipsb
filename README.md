@@ -1,6 +1,17 @@
 # pipsb
 
-`pipsb` loads test `.dta` files from a private GitHub repository directly into Stata memory.
+`pipsb` installs from `GPID-WB/pipsb` and loads test `.dta` files from the private data repository `GPID-WB/pip-sandbox` directly into Stata memory.
+
+By default, `pipsb` uses the latest GitHub release from the data repository. It reads `data_catalog.csv` from the root of that release, filters the catalog to `.dta` files for the requested `ppp_year()`, and then downloads the selected dataset.
+
+## Installation
+
+`pipsb` can be installed separately from the private data repository:
+
+```stata
+net install github, from("https://haghish.github.io/github/")
+github install GPID-WB/pipsb
+```
 
 ## Token setup
 
@@ -18,7 +29,7 @@ Create the token from your personal GitHub account:
 Recommended settings:
 
 1. Resource owner: `GPID-WB`
-2. Repository access: only the private data repository, or all repositories if needed
+2. Repository access: `GPID-WB/pip-sandbox`, or all repositories if needed
 3. Repository permissions: `Contents = Read-only`
 4. Expiration: a reasonable period such as 90 or 180 days
 
@@ -40,17 +51,37 @@ To verify that the token is available:
 display "$GPID_GITHUB_TOKEN"
 ```
 
-## Example
+## Examples
+
+List the releases available in the private data repository:
+
+```stata
+pipsb, listreleases
+```
+
+List the available `.dta` files for the default PPP year in the latest release:
+
+```stata
+pipsb
+```
+
+Load a dataset from the latest release:
 
 ```stata
 pipsb, filename(syears)
 ```
 
+Load a dataset from a specific release tag:
+
+```stata
+pipsb, ppp_year(2017) filename(aggregates) release(202603131536)
+```
+
 ## Troubleshooting
 
 - If the token is not found, check `profile.do` and restart Stata.
-- If you get `401` or `403`, confirm the token is fine-grained, has `Contents: Read-only`, and has been authorized if required.
-- If you get `404`, confirm the file path, branch, and repository access.
+- If you get `401` or `403`, confirm the token is fine-grained, has `Contents: Read-only` on `GPID-WB/pip-sandbox`, and has been authorized if required.
+- If you get `404`, confirm the release tag, PPP year, file name, and repository access.
 
 ## Security
 

@@ -20,7 +20,7 @@ reference, or use for any analytical or policy purpose.
 
 {p 8 16 2}
 {cmd:pipsb}
-[{cmd:,} {opt ppp_year(#)} {opt filename(name)}]
+[{cmd:,} {opt ppp_year(#)} {opt filename(name)} {opt release(tag)} {opt listreleases}]
 
 {title:Options}
 
@@ -31,21 +31,30 @@ reference, or use for any analytical or policy purpose.
 {phang}
 {opt filename(name)} specifies the dataset to load. Must be one of:
 
-{p2colset 12 28 30 2}
-{p2col:{bf:syears}}Survey-year poverty estimates{p_end}
-{p2col:{bf:lyears}}Lineup (gap-filled) poverty estimates{p_end}
-{p2col:{bf:aggregates}}Regional aggregates (World Bank regions){p_end}
+{p 8 8 2}
+The available values are read from {bf:data_catalog.csv} in the private data
+repository for the selected release and filtered to {bf:extension = dta} and
+the requested {opt ppp_year()}. If {opt filename()} is omitted, {cmd:pipsb}
+lists the available files for that PPP year and exits without loading data.
 
 {phang}
-If {opt filename()} is omitted, {cmd:pipsb} lists the available files
-and exits without loading any data.
+{opt release(tag)} specifies the data release tag to use. If omitted,
+{cmd:pipsb} uses the {bf:latest} GitHub release from the private data
+repository.
+
+{phang}
+{opt listreleases} lists all available release tags from the private data
+repository and exits without loading data.
 
 {title:Description}
 
 {p 4 4 2}
-{cmd:pipsb} downloads a {bf:.dta} file from a private GitHub repository
-and loads it into memory using {cmd:use}. The command authenticates with a
-GitHub personal access token stored in the global macro
+{cmd:pipsb} downloads a {bf:.dta} file from the private data repository
+{bf:GPID-WB/pip-sandbox} and loads it into memory using {cmd:use}. The
+command first resolves a release tag, downloads {bf:data_catalog.csv} from the
+root of that release, filters the catalog to the requested {opt ppp_year()} and
+Stata files, and then downloads the requested dataset. The command
+authenticates with a GitHub personal access token stored in the global macro
 {cmd:GPID_GITHUB_TOKEN}. No permanent file is saved to disk.
 
 {title:Setup}
@@ -62,9 +71,9 @@ tokens to a repository, shared do-file, or project configuration file.
 
 {p 4 4 2}
 The token should be a fine-grained GitHub personal access token with
-{bf:Contents: Read} permission on the private data repository. Depending on
-organization settings, SSO authorization or admin approval may also be
-required.
+{bf:Contents: Read} permission on the private data repository
+{bf:GPID-WB/pip-sandbox}. Depending on organization settings, SSO
+authorization or admin approval may also be required.
 
 {p 4 4 2}
 After updating {cmd:profile.do}, restart Stata and verify the token with
@@ -77,19 +86,22 @@ authenticated downloads.
 {title:Examples}
 
 {phang2}{cmd:. pipsb}{p_end}
-{phang2}(lists available filenames for the default PPP year 2021)
+{phang2}(lists available .dta files for PPP year 2021 in the latest release)
+
+{phang2}{cmd:. pipsb, listreleases}{p_end}
+{phang2}(lists all available release tags)
 
 {phang2}{cmd:. pipsb, filename(syears)}{p_end}
-{phang2}(loads 2021 PPP survey-year estimates)
+{phang2}(loads 2021 PPP survey-year estimates from the latest release)
 
-{phang2}{cmd:. pipsb, ppp_year(2017) filename(aggregates)}{p_end}
-{phang2}(loads 2017 PPP regional aggregates)
+{phang2}{cmd:. pipsb, ppp_year(2017) filename(aggregates) release(202603131536)}{p_end}
+{phang2}(loads 2017 PPP regional aggregates from a specific release)
 
 {title:Repository}
 
 {p 4 4 2}
-The Stata package can be distributed separately from the private data
-repository.
+The Stata package repository is {bf:GPID-WB/pipsb}. Runtime data downloads are
+served from the separate private data repository {bf:GPID-WB/pip-sandbox}.
 
 {title:Installation}
 
@@ -97,7 +109,7 @@ repository.
 Requires the {browse "https://github.com/haghish/github":github} package:
 
 {phang2}{cmd:. net install github, from("https://haghish.github.io/github/")}{p_end}
-{phang2}{cmd:. github install GPID-WB/pip-sandbox}{p_end}
+{phang2}{cmd:. github install GPID-WB/pipsb}{p_end}
 
 {title:Author}
 
