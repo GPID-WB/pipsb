@@ -162,6 +162,7 @@ When changing this package:
 4. Do not commit local tokens, logs, or temporary debugging files.
 5. Prefer updating `README.md` and `pipsb.sthlp` together when behavior changes.
 6. Preserve the testing-data warning in user-facing output and docs.
+7. After adding a new user-facing feature or behavior change, ask whether to create a new git tag and GitHub release for the package version.
 
 ## Non-goals
 
