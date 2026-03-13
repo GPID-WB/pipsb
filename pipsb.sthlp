@@ -1,5 +1,5 @@
 {smcl}
-{* 2026-03-12}{...}
+{* 2026-03-13}{...}
 {hline}
 Help for {bf:pipsb}
 {hline}
@@ -57,16 +57,22 @@ Before using {cmd:pipsb}, define the global macro
 {phang2}{cmd:global GPID_GITHUB_TOKEN "<your GitHub token>"}{p_end}
 
 {p 4 4 2}
-Each user should store their own token locally. Do not commit tokens to a
-repository, shared do-file, or project configuration file.
+Each user should create and store their own token locally. Do not commit
+tokens to a repository, shared do-file, or project configuration file.
 
 {p 4 4 2}
 The token should be a fine-grained GitHub personal access token with
-{bf:Contents: Read} permission on the private data repository.
+{bf:Contents: Read} permission on the private data repository. Depending on
+organization settings, SSO authorization or admin approval may also be
+required.
 
 {p 4 4 2}
-This implementation currently uses Windows PowerShell for authenticated
-downloads.
+After updating {cmd:profile.do}, restart Stata and verify the token with
+{cmd:display "$GPID_GITHUB_TOKEN"}.
+
+{p 4 4 2}
+This implementation currently supports Windows and uses {cmd:curl.exe} for
+authenticated downloads.
 
 {title:Examples}
 
