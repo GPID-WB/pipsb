@@ -3,3 +3,4 @@ _debug_pipsb.log
 .vscode/
 *.log
 *.tmp
+.posit/assistant/settings.json

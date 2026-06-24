@@ -1,0 +1,24 @@
+# Normalize line endings to LF in the repository;
+# Git will convert to CRLF on checkout on Windows.
+* text=auto eol=lf
+
+# Stata source files – always LF
+*.do   text eol=lf
+*.ado  text eol=lf
+*.sthlp text eol=lf
+*.pkg  text eol=lf
+*.toc  text eol=lf
+
+# Common text files
+*.md   text eol=lf
+*.txt  text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+
+# Binary files – do not touch
+*.dta  binary
+*.png  binary
+*.jpg  binary
+*.pdf  binary
+*.zip  binary
