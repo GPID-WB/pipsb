@@ -4,6 +4,13 @@
 
 By default, `pipsb` uses the latest GitHub release from the data repository. It reads `data_catalog.csv` from the root of that release, filters the catalog to `.dta` files for the requested `ppp_year()`, and then downloads the selected dataset.
 
+## Requirements
+
+- Stata 14 or later
+- macOS, Linux, or Windows
+- `curl` available on the system path (ships by default on macOS 10.15+, most Linux distributions, and Windows 10 build 1803+)
+- A fine-grained GitHub personal access token with read access to `GPID-WB/pip-sandbox`
+
 ## Installation
 
 `pipsb` can be installed separately from the private data repository:
@@ -83,6 +90,7 @@ pipsb, ppp_year(2017) filename(aggregates) release(202603131536)
 - If the token is not found, check `profile.do` and restart Stata.
 - If you get `401` or `403`, confirm the token is fine-grained, has `Contents: Read-only` on `GPID-WB/pip-sandbox`, and has been authorized if required.
 - If you get `404`, confirm the release tag, PPP year, file name, and repository access.
+- On macOS or Linux, confirm `curl` is on your system path by running `curl --version` in a terminal.
 
 ## Security
 
