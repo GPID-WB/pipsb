@@ -69,10 +69,6 @@ program define _pipsb_validate_environment
         exit 198
     }
 
-    if c(os) != "Windows" {
-        di as error "pipsb private downloads currently require Windows."
-        exit 198
-    }
 end
 
 program define _pipsb_fetch_github
@@ -81,7 +77,12 @@ program define _pipsb_fetch_github
 
     tempfile statusfile errmsgfile
 
-    capture quietly shell cmd /c curl.exe -L -sS -H "Authorization: Bearer `token'" -H "Accept: `accept'" -H "X-GitHub-Api-Version: 2022-11-28" -o "`target'" -w "%{http_code}" "`url'" > "`statusfile'" 2> "`errmsgfile'"
+    if c(os) == "Windows" {
+        capture quietly shell cmd /c curl.exe -L -sS -H "Authorization: Bearer `token'" -H "Accept: `accept'" -H "X-GitHub-Api-Version: 2022-11-28" -o "`target'" -w "%{http_code}" "`url'" > "`statusfile'" 2> "`errmsgfile'"
+    }
+    else {
+        capture quietly shell curl -L -sS -H "Authorization: Bearer `token'" -H "Accept: `accept'" -H "X-GitHub-Api-Version: 2022-11-28" -o "`target'" -w "%{http_code}" "`url'" > "`statusfile'" 2> "`errmsgfile'"
+    }
     local shell_rc = _rc
 
     capture confirm file "`statusfile'"
